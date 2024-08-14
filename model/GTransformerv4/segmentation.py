@@ -98,7 +98,7 @@ class GTransformerv4(nn.Module):
         self.cattn1 = ChannelAttention(input_channels=in_channels,internal_neurons=in_channels//4)
         self.cattn2 = ChannelAttention(input_channels=in_channels*2,internal_neurons=in_channels//2)
         self.cattn3 = ChannelAttention(input_channels=in_channels*4,internal_neurons=in_channels)
-        self.cattn4 = ChannelAttention(input_channels=in_channels*8,internal_neurons=in_channels)
+        self.cattn4 = ChannelAttention(input_channels=in_channels*8,internal_neurons=in_channels*2)
         self.decoder4 = UpBlock_attention(in_channels * 16, in_channels * 4, nb_Conv=2)
         self.decoder3 = UpBlock_attention(in_channels * 8, in_channels * 2, nb_Conv=2)
         self.decoder2 = UpBlock_attention(in_channels * 4, in_channels, nb_Conv=2)
