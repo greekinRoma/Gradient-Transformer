@@ -6,6 +6,7 @@ from .Gradient_attention.contrast_and_atrous import AttnContrastLayer
 from .CDCNs.Gradient_model import ExpansionContrastModule
 from .ChannelAttention.SCTrans import ChannelTransformer
 from .AttentionModule import *
+from .Upsample.CARAFE import CARAFE
 # from .CDCNs.Gradient_model import ExpansionContrastModule
 # from .CDCNs.CDCN import Conv2d_cd
 # from model.utils import init_weights, count_param
@@ -37,8 +38,8 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
 class UpBlock_attention(nn.Module):
     def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
         super().__init__()
-        self.up = nn.Upsample(scale_factor=2)
-        self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
+        self.up = CARAFE(c=in_channels//2,c_mid=in_channels//8)
+        self.nConvs = nn.Upsample(scale_factor=2)
         # self.coatt = CCA(F_g=in_channels // 2, F_x=in_channels // 2)
         # self.contras_layer = ExpansionContrastModule(in_channels=in_channels//2,out_channels=in_channels//2,width=width,height=height)
     def forward(self, x, skip_x):
@@ -76,7 +77,7 @@ class Res_block(nn.Module):
         out = self.relu(out)
         return out
 
-class GTransformerv2(nn.Module):
+class GTransformerv4(nn.Module):
     def __init__(self,  n_channels=1, n_classes=1, img_size=256, vis=False, mode='train', deepsuper=True):
         super().__init__()
         self.vis = vis
@@ -84,7 +85,7 @@ class GTransformerv2(nn.Module):
         self.mode = mode
         self.n_channels = n_channels
         self.n_classes = n_classes
-        in_channels = 32  # basic channel 64
+        in_channels = 16  # basic channel 64
         block = Res_block
         self.pool = nn.MaxPool2d(2, 2)
         self.inc = self._make_layer(block, n_channels, in_channels)
@@ -131,6 +132,6 @@ class GTransformerv2(nn.Module):
         # decoder
         d4 = self.decoder4(d5*self.cattn4(x4), c4)
         d3 = self.decoder3(d4*self.cattn3(x3), c3)
-        d2 = self.decoder2(d3*self.cattn3(x2), c2)
+        d2 = self.decoder2(d3*self.cattn2(x2), c2)
         out = self.outc(self.decoder1(d2*self.cattn1(x1), c1))
         return out.sigmoid()

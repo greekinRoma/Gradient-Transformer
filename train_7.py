@@ -28,7 +28,7 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 
 parser = argparse.ArgumentParser(description="PyTorch ISTD")
 
-parser.add_argument("--model_names", default=['SCTrans'], type=str, nargs='+',
+parser.add_argument("--model_names", default=['GTransformerv4'], type=str, nargs='+',
                     help="model_name: 'ALCNet', 'ACM', "
                          "'DNANet', 'AGPCNet'")
 parser.add_argument("--dataset_names", default=['NUDT-SIRST'], type=str, nargs='+',

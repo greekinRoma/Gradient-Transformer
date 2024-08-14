@@ -29,6 +29,8 @@ class Net(nn.Module):
             self.model = GTransformer()
         elif model_name == 'GTransformerv2':
             self.model = GTransformerv2()
+        elif model_name == "GTransformerv4":
+            self.model = GTransformerv4()
         elif model_name == 'UNet':
             self.model = UNet()
         elif model_name == 'SCTrans':

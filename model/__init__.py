@@ -10,5 +10,6 @@ from model.ISTDUNet.model_ISTDUNet import ISTDU_Net as ISTDU_Net
 from model.RDIAN.model_RDIAN import RDIAN as RDIAN
 from model.GTransformer.segmentation import GTransformer
 from model.UNet.UNet import UNet
-from model.GTransformerv4.segmentation import GTransformerv2
+from model.GTransformerv2.segmentation import GTransformerv2
+from model.GTransformerv4.segmentation import GTransformerv4
 from model.SCTrans.segmentation import SCTrans
