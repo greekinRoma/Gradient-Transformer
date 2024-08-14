@@ -29,10 +29,10 @@ class ExpansionContrastModule(nn.Module):
         self.height = height
         self.area = width* height
         self.psi = nn.InstanceNorm2d(len(self.shifts))
-        self.position_embeddings = nn.Parameter(torch.zeros(1,1,self.area))
-        self.layernorm1 = nn.LayerNorm(self.area)
-        self.layernorm2 = nn.LayerNorm(self.area)
-        self.layernorm3 = nn.LayerNorm(self.area)
+        # self.position_embeddings = nn.Parameter(torch.zeros(1,1,self.area))
+        # self.layernorm1 = nn.LayerNorm(self.area)
+        # self.layernorm2 = nn.LayerNorm(self.area)
+        # self.layernorm3 = nn.LayerNorm(self.area)
         self.softmax_layer = nn.Softmax(dim=-1)
         self.query_convs=nn.ModuleList()
         self.key_convs=nn.ModuleList()

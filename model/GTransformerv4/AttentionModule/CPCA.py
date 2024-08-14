@@ -31,14 +31,14 @@ class ChannelAttention(nn.Module):
         self.fc2 = nn.Conv2d(in_channels=internal_neurons, out_channels=input_channels, kernel_size=1, stride=1, bias=True)
         self.input_channels = input_channels
 
-    def forward(self, inputs):
-        x1 = F.adaptive_avg_pool2d(inputs, output_size=(1, 1))
+    def forward(self, x):
+        x1 = F.adaptive_avg_pool2d(x, output_size=(1, 1))
         # print('x:', x.shape)
         x1 = self.fc1(x1)
         x1 = F.relu(x1, inplace=True)
         x1 = self.fc2(x1)
         x1 = torch.sigmoid(x1)
-        x2 = F.adaptive_max_pool2d(inputs, output_size=(1, 1))
+        x2 = F.adaptive_max_pool2d(x, output_size=(1, 1))
         # print('x:', x.shape)
         x2 = self.fc1(x2)
         x2 = F.relu(x2, inplace=True)
