@@ -36,14 +36,14 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
 class UpBlock_attention(nn.Module):
     def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
         super().__init__()
-        # self.up = nn.Upsample(scale_factor=2)
+        self.up = nn.Upsample(scale_factor=2)
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
         # self.coatt = CCA(F_g=in_channels // 2, F_x=in_channels // 2)
         # self.contras_layer = ExpansionContrastModule(in_channels=in_channels//2,out_channels=in_channels//2,width=width,height=height)
     def forward(self, x, skip_x):
-        # up = self.up(x)
+        up = self.up(x)
         # skip_x_att = self.coatt(g=up, x=skip_x)
-        x = torch.cat([skip_x, x], dim=1)  # dim 1 is the channel dimension
+        x = torch.cat([skip_x, up], dim=1)  # dim 1 is the channel dimension
         return self.nConvs(x)
 class Res_block(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
@@ -130,8 +130,8 @@ class GTransformerv4(nn.Module):
         c3 = self.contras3(x3)
         c4 = self.contras4(x4)
         # decoder
-        d4 = self.decoder4(self.up1(d5)*self.cattn4(x4), c4)
-        d3 = self.decoder3(self.up2(d4)*self.cattn3(x3), c3)
-        d2 = self.decoder2(self.up3(d3)*self.cattn2(x2), c2)
-        out = self.outc(self.decoder1(self.up4(d2)*self.cattn1(x1), c1))
+        d4 = self.decoder4(d5*self.cattn4(x4), c4)
+        d3 = self.decoder3(d4*self.cattn3(x3), c3)
+        d2 = self.decoder2(d3*self.cattn2(x2), c2)
+        out = self.outc(self.decoder1(d2*self.cattn1(x1), c1))
         return out.sigmoid()
