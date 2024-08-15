@@ -74,12 +74,11 @@ def train():
 
     train_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=True)
 
-    net = Net(model_name=opt.model_name, mode='train')
+    net = Net(model_name=opt.model_name, mode='train').cuda()
     # input = torch.randn(1,1,256,256)
     # macs, params = profile(net, inputs=(input, ))
     # print(' FLOPs: ', macs*2)   # 一般来讲，FLOPs是macs的两倍
     # print('params: ', params)
-    net = net.cuda()
     # print(net)
     net.train()
 
