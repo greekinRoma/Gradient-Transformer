@@ -33,14 +33,17 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
 class UpBlock_attention(nn.Module):
     def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
         super().__init__()
-        self.up = nn.Upsample(scale_factor=2)
+        self.up = nn.Upsample(scale_factor=2,mode='bilinear')
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
-        self.cattn = EMA_fuse(channels=in_channels//2)
-    def forward(self,d,c,x):
+        self.cattn = ChannelAttention(input_channels=in_channels//2,internal_neurons=in_channels//16)
+        self.sattn = EMA_fuse(channels=in_channels//2)
+    def forward(self,d,c,xin):
+        d = self.cattn(xin)*d
         d = self.up(d)
-        d = self.cattn(low=x,high=d)
+        x = self.sattn(low=d,high=xin)
         x = torch.cat([c, d], dim=1)  # dim 1 is the channel dimension
-        return self.nConvs(x)
+        x = self.nConvs(x)
+        return x
 class Res_block(nn.Module):
     def __init__(self, in_channels, out_channels, stride=1):
         super(Res_block, self).__init__()
