@@ -36,7 +36,7 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
 class UpBlock_attention(nn.Module):
     def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
         super().__init__()
-        self.up = nn.Upsample(scale_factor=2)
+        self.up = nn.Upsample(scale_factor=2,mode='bilinear')
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
         # self.coatt = CCA(F_g=in_channels // 2, F_x=in_channels // 2)
         # self.contras_layer = ExpansionContrastModule(in_channels=in_channels//2,out_channels=in_channels//2,width=width,height=height)
