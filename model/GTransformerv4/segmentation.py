@@ -35,10 +35,11 @@ class UpBlock_attention(nn.Module):
         super().__init__()
         self.up = nn.Upsample(scale_factor=2,mode='bilinear')
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
-        self.cattn = ChannelAttention(input_channels=in_channels//2,internal_neurons=in_channels//16)
+        # self.cattn = ChannelAttention(input_channels=in_channels//2,internal_neurons=in_channels//16)
+        self.cattn = eca_layer_fuse(channel=in_channels//2)
         self.sattn = EMA_fuse(channels=in_channels//2)
     def forward(self,d,c,xin):
-        d = self.cattn(xin)*d
+        d = self.cattn(low=xin,high=d)
         d = self.up(d)
         x = self.sattn(low=d,high=xin)
         x = torch.cat([c, d], dim=1)  # dim 1 is the channel dimension
