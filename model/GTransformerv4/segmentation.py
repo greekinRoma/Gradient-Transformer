@@ -12,7 +12,7 @@ def get_activation(activation_type):
     else:
         return nn.ReLU()
 class CBN(nn.Module):
-    def __init__(self, in_channels, out_channels, activation='ReLU'):
+    def __init__(self, in_channels, out_channels, activation='LeakyReLU'):
         super(CBN, self).__init__()
         self.conv = nn.Conv2d(in_channels, out_channels,
                               kernel_size=3, padding=1)
@@ -23,7 +23,7 @@ class CBN(nn.Module):
         out = self.conv(x)
         out = self.norm(out)
         return self.activation(out)
-def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
+def _make_nConv(in_channels, out_channels, nb_Conv, activation='LeakyReLU'):
     layers = []
     layers.append(CBN(in_channels, out_channels, activation))
 
@@ -31,17 +31,17 @@ def _make_nConv(in_channels, out_channels, nb_Conv, activation='ReLU'):
         layers.append(CBN(out_channels, out_channels, activation))
     return nn.Sequential(*layers)
 class UpBlock_attention(nn.Module):
-    def __init__(self, in_channels, out_channels, nb_Conv, activation='ReLU'):
+    def __init__(self, in_channels, out_channels, nb_Conv, activation='LeakyReLU'):
         super().__init__()
         self.up = nn.Upsample(scale_factor=2,mode='bilinear')
         self.nConvs = _make_nConv(in_channels, out_channels, nb_Conv, activation)
         # self.cattn = ChannelAttention(input_channels=in_channels//2,internal_neurons=in_channels//16)
         self.cattn = eca_layer_fuse(channel=in_channels//2)
-        self.sattn = EMA_fuse(channels=in_channels//2)
+        # self.sattn = EMA_fuse(channels=in_channels//2)
     def forward(self,d,c,xin):
         d = self.cattn(low=xin,high=d)
         d = self.up(d)
-        x = self.sattn(low=d,high=xin)
+        # x = self.sattn(low=d,high=xin)
         x = torch.cat([c, d], dim=1)  # dim 1 is the channel dimension
         x = self.nConvs(x)
         return x
