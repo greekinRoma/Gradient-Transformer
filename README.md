@@ -2,7 +2,7 @@
 
 🎉📢 Big news! Our paper is almost ready to make its debut! 🌟(⑅˃◡˂⑅)✨ We have seven awesome versions of GTrans, and guess what? The fourth network is the star of the show! 🌟🚀 If you're eager to try out our model, definitely go for the fourth one—it's the best of the bunch! 💪💖🌈 Thank you for your support and enthusiasm! 🌟(⑅˃◡˂⑅)💫
 ## Cited by 
-《Adaptive Strategies for Multiscale Gradient Fusion in Neural Networks》shows that our network is suitable for visible light pictures.
+《Adaptive Strategies for Multiscale Gradient Fusion in Neural Networks》\url{https://www.researchgate.net/profile/Xinyi-Zhang-235/publication/385103761_Adaptive_Strategies_for_Multiscale_Gradient_Fusion_in_Neural_Networks/links/6716a74209ba2d0c76174965/Adaptive-Strategies-for-Multiscale-Gradient-Fusion-in-Neural-Networks.pdf} shows that our network is suitable for visible light pictures.
 ## Train
 
 For training setting in our paper please use the command
